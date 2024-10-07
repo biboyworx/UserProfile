@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Switch } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Switch, ImageBackground } from 'react-native';
 import { Avatar } from 'react-native-elements';
-import MyPicture from '../assets/images/avatar.jpg';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+const avatar = require('../assets/images/avatar.jpg');
+const HeaderBackground = require('../assets/images/header.jpg');
 
 const COLORS = {
   light: {
@@ -24,12 +26,16 @@ const COLORS = {
 const UserProfile = () => {
   const [user] = useState({
     name: 'Rodel Madrid',
-    address: 'Lawesbra, Lapasan CDOC',
+    username: '@biboyworx',
+    address: 'Lawesbra, Lapasan CDOC, Misamis Oriental, Philippines',
     email: 'biboymadrid81@gmail.com',
     phonenumber: '09619325548',
     bio: 'Chances are low, but never zero.',
-    profilePicture: MyPicture,
+    profilePicture: avatar,
     joinedDate: '5 months ago',
+    posts: 20,
+    followers: 127,
+    following: 80,
   });
 
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -38,27 +44,48 @@ const UserProfile = () => {
 
   const showAlert = (message) => Alert.alert(message);
 
-  const renderText = (label, value) => (
-    <>
-      <Text style={[styles.infoLabel, { color: isDarkMode ? '#bbbbbb' : '#333' }]}>{label}:</Text>
-      <Text style={[styles.infoText, { color: isDarkMode ? '#f2f2f2' : '#333' }]}>{value}</Text>
-    </>
+  const renderText = (label, value, icon) => (
+    <View style={styles.infoRow}>
+      <Icon name={icon} size={24} color={isDarkMode ? '#bbbbbb' : '#333'} />
+      <View style={styles.infoTextContainer}>
+        <Text style={[styles.infoLabel, { color: isDarkMode ? '#bbbbbb' : '#333' }]}>{label}:</Text>
+        <Text style={[styles.infoText, { color: isDarkMode ? '#f2f2f2' : '#333' }]}>{value}</Text>
+      </View>
+    </View>
   );
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: isDarkMode ? COLORS.dark.background : COLORS.light.background }]}>
-      <View style={[styles.header, { backgroundColor: isDarkMode ? COLORS.dark.header : COLORS.light.header }]}>
-        <Avatar rounded size="xlarge" source={user.profilePicture} containerStyle={styles.avatar} />
-        <Text style={[styles.name, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>{user.name}</Text>
-        <Text style={[styles.joinedText, { color: isDarkMode ? '#cccccc' : '#fff' }]}>Joined {user.joinedDate}</Text>
+      <ImageBackground source={HeaderBackground} style={styles.headerBackground}>
+        <View style={[styles.header, { backgroundColor: isDarkMode ? COLORS.dark.header : 'rgba(270, 260, 260, 0.4)' }]}>
+          <Avatar rounded size={95} source={user.profilePicture} containerStyle={styles.avatar} />
+          <Text style={[styles.name, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>{user.name}</Text>
+          <Text style={[styles.username, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>{user.username}</Text>
+          <Text style={[styles.joinedText, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>Joined {user.joinedDate}</Text>
 
-        <TouchableOpacity onPress={() => showAlert('Edit Profile Pressed')}>
-          <Text style={[styles.editText, isDarkMode ? styles.editTextDark : styles.editTextLight]}>Edit Profile</Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => showAlert('Edit Profile Pressed')}>
+            <Text style={[styles.editText, isDarkMode ? styles.editTextDark : styles.editTextLight]}>Edit Profile</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => showAlert('Settings Pressed')} style={styles.settingsContainer}>
-          <Icon name="settings-outline" size={30} color={isDarkMode ? '#00ffcc' : '#000080'} />
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => showAlert('Settings Pressed')} style={styles.settingsContainer}>
+            <Icon name="settings-outline" size={30} color={isDarkMode ? '#00ffcc' : '#000080'} />
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+
+      <View style={styles.statsContainer}>
+        <View style={styles.statItem}>
+          <Text style={[styles.statValue, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>{user.posts}</Text>
+          <Text style={[styles.statLabel, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>Posts</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Text style={[styles.statValue, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>{user.followers}</Text>
+          <Text style={[styles.statLabel, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>Followers</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Text style={[styles.statValue, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>{user.following}</Text>
+          <Text style={[styles.statLabel, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>Following</Text>
+        </View>
       </View>
 
       <View style={styles.toggleContainer}>
@@ -75,14 +102,17 @@ const UserProfile = () => {
       </View>
 
       <View style={[styles.infoSection, { backgroundColor: isDarkMode ? '#333333' : '#fff' }]}>
-        {renderText('Email', user.email)}
-        {renderText('Phone', user.phonenumber)}
-        {renderText('Bio', user.bio)}
-        {renderText('Address', user.address)}
+        {renderText('Email', user.email, 'mail-outline')}
+        {renderText('Phone', user.phonenumber, 'call-outline')}
+        {renderText('Bio', user.bio, 'person-outline')}
+        {renderText('Address', user.address, 'home-outline')}
       </View>
 
-      <View style={styles.buttonContainer}> 
-        <TouchableOpacity style={[styles.signOutButton, { backgroundColor: isDarkMode ? COLORS.dark.button : COLORS.light.button }]} onPress={() => showAlert('Sign Out Pressed')}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.signOutButton, { backgroundColor: isDarkMode ? COLORS.dark.button : COLORS.light.button }]}
+          onPress={() => showAlert('Sign Out Pressed')}
+        >
           <Text style={[styles.buttonText, { color: isDarkMode ? COLORS.dark.buttonText : COLORS.light.buttonText }]}>Sign Out</Text>
         </TouchableOpacity>
       </View>
@@ -93,6 +123,10 @@ const UserProfile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerBackground: {
+    width: '100%',
+    height: 250,
   },
   header: {
     alignItems: 'center',
@@ -108,19 +142,47 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
   },
+  username: {
+    fontSize: 16,
+    color: '#666',
+  },
   joinedText: {
     fontSize: 16,
     marginTop: 5,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 20,
+    marginHorizontal: 20,
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  statLabel: {
+    fontSize: 16,
+    color: '#888',
   },
   infoSection: {
     margin: 20,
     padding: 10,
     borderRadius: 10,
   },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  infoTextContainer: {
+    marginLeft: 10,
+  },
   infoLabel: {
     fontSize: 18,
     fontWeight: '600',
-    marginTop: 10,
   },
   infoText: {
     fontSize: 16,
@@ -148,7 +210,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   editTextLight: {
-    color: '#000080', 
+    color: '#000080',
   },
   editTextDark: {
     color: '#00ffcc',
