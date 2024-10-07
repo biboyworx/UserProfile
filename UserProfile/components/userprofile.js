@@ -4,7 +4,7 @@ import { Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const avatar = require('../assets/images/avatar.jpg');
-const HeaderBackground = require('../assets/images/header.jpg');
+const HeaderBackground = require('../assets/images/neewheadeer.jpg');
 
 const COLORS = {
   light: {
@@ -57,18 +57,23 @@ const UserProfile = () => {
   return (
     <ScrollView style={[styles.container, { backgroundColor: isDarkMode ? COLORS.dark.background : COLORS.light.background }]}>
       <ImageBackground source={HeaderBackground} style={styles.headerBackground}>
-        <View style={[styles.header, { backgroundColor: isDarkMode ? COLORS.dark.header : 'rgba(270, 260, 260, 0.4)' }]}>
+        <View style={[styles.header, { backgroundColor: isDarkMode ? 'rgba(31, 31, 31, 0.5)' : 'transparent' }]}>
           <Avatar rounded size={95} source={user.profilePicture} containerStyle={styles.avatar} />
           <Text style={[styles.name, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>{user.name}</Text>
           <Text style={[styles.username, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>{user.username}</Text>
           <Text style={[styles.joinedText, { color: isDarkMode ? COLORS.dark.text : COLORS.light.text }]}>Joined {user.joinedDate}</Text>
 
           <TouchableOpacity onPress={() => showAlert('Edit Profile Pressed')}>
-            <Text style={[styles.editText, isDarkMode ? styles.editTextDark : styles.editTextLight]}>Edit Profile</Text>
+            <Text style={[
+              styles.editText,
+              isDarkMode ? styles.editTextDarkMode : styles.editTextLightMode,
+            ]}>
+              Edit Profile
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => showAlert('Settings Pressed')} style={styles.settingsContainer}>
-            <Icon name="settings-outline" size={30} color={isDarkMode ? '#00ffcc' : '#000080'} />
+            <Icon name="settings-outline" size={30} color={isDarkMode ? '#007bff' : '#000080'} />
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -209,11 +214,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textDecorationLine: 'underline',
   },
-  editTextLight: {
+  editTextLightMode: {
     color: '#000080',
+    fontWeight: 'normal', 
   },
-  editTextDark: {
-    color: '#00ffcc',
+  editTextDarkMode: {
+    color: '#007bff', 
+    fontWeight: 'bold', 
   },
   settingsContainer: {
     position: 'absolute',
